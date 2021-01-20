@@ -6,11 +6,13 @@ import br.com.symbiosys.regescweb.models.StatusProfessor;
 import br.com.symbiosys.regescweb.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -31,25 +33,33 @@ public class ProfessorController {
         return mv;
     }
 
-    @GetMapping("/professor/new")
-    public ModelAndView newProfessor() {
+    @GetMapping("/professores/new")
+    public ModelAndView newProfessor(ProfessorDto requisicao) {
 
         ModelAndView mv = new ModelAndView("professores/new");
+        mv.addObject("listaStatusProfessor", StatusProfessor.values());
 
-        mv.addObject("statusProfessor", StatusProfessor.values());
 
 
         return mv;
     }
 
     @PostMapping("/professores")
-    public String create(ProfessorDto professorDto){
+    public ModelAndView create(@Valid ProfessorDto requisicao, BindingResult result){
 
-        Professor professor = professorDto.toProfessor();
-        System.out.println(professorDto);
-        System.out.println(professor);
+        if(result.hasErrors()){
+            ModelAndView mv = new ModelAndView("professores/new");
+            mv.addObject("listaStatusProfessor", StatusProfessor.values());
+            return mv ;
+        } else {
 
-        this.professorRepository.save(professor);
-        return "redirect:/professores";
+            Professor professor = requisicao.toProfessor();
+            System.out.println(requisicao);
+            System.out.println(professor);
+
+            this.professorRepository.save(professor);
+            return new ModelAndView("redirect:/professores");
+        }
+
     }
 }

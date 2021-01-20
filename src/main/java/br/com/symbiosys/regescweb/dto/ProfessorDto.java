@@ -5,10 +5,17 @@ import br.com.symbiosys.regescweb.models.StatusProfessor;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ProfessorDto {
+
+    @NotBlank @NotNull
     private String nome;
+    @NotNull
+    @DecimalMin(value ="0.0", inclusive = false)
     private BigDecimal salario;
     private StatusProfessor status;
 
