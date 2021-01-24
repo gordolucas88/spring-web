@@ -1,5 +1,7 @@
 package br.com.symbiosys.regescweb.models;
 
+import br.com.symbiosys.regescweb.dto.ProfessorDto;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -22,6 +24,8 @@ public class Professor {
         this.salario = salario;
         this.status = status;
     }
+
+
 
     public Long getId() {
         return id;

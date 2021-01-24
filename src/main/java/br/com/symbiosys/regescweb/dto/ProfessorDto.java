@@ -52,6 +52,21 @@ public class ProfessorDto {
         return professor;
     }
 
+    public void fromProfessor(Professor professor){
+        this.nome = professor.getNome();
+        this.salario = professor.getSalario();
+        this.status = professor.getStatus();
+    }
+
+    public Professor toProfessor(Professor professor){
+
+        professor.setNome(this.nome);
+        professor.setSalario(this.salario);
+        professor.setStatus(this.status);
+
+        return professor;
+    }
+
     @Override
     public String toString() {
         return "ProfessorDto{" +
