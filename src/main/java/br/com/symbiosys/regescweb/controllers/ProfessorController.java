@@ -6,8 +6,10 @@ import br.com.symbiosys.regescweb.models.StatusProfessor;
 import br.com.symbiosys.regescweb.repositories.ProfessorRepository;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.expression.spel.ast.OpAnd;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,7 +67,7 @@ public class ProfessorController {
             System.out.println(professor);
 
             this.professorRepository.save(professor);
-            return new ModelAndView("redirect:/professores" + professor.getId());
+            return new ModelAndView("redirect:/professores/" + professor.getId());
         }
 
     }
@@ -136,9 +138,29 @@ public class ProfessorController {
 
                 return new ModelAndView("redirect:/professores/" + professor.getId());
             } else {
-                return new ModelAndView("redirect:/professores");
+                ModelAndView mv = new ModelAndView("redirect:/professores");
+                mv.addObject("mensagem", "Professor #" + id + " não encontrado!");
+                mv.addObject("erro", true);
+                return mv;
             }
         }
+
+    }
+    @GetMapping("/{id}/delete")
+    public ModelAndView delete(@PathVariable Long id){
+        ModelAndView mv = new  ModelAndView("redirect:/professores");
+        try {
+            this.professorRepository.deleteById(id);
+            mv.addObject("mensagem", "Professor #" + id + " deletado com sucesso!");
+            mv.addObject("erro", false);
+        }
+        catch (EmptyResultDataAccessException e) {
+
+            mv.addObject("mensagem", "Professor #" + id + " não encontrado!");
+            mv.addObject("erro", true);
+        }
+
+    return mv;
 
     }
 }
